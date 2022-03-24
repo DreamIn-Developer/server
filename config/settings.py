@@ -49,7 +49,7 @@ PROJECT_APPS = [
     'accounts',
     'posts',
     'notifications',
-    'profiles',
+    'teams',
 ]
 
 THIRD_PARTY_APPS = [
