@@ -1,12 +1,12 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
-
+from django.utils.translation import gettext_lazy as _
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def create_user(self, email, nickname, password, description, image):
+    def create_user(self, email, nickname, password, description, image, **kwargs):
 
         if not email:
             raise ValueError('must have user email')
@@ -46,7 +46,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     nickname = models.CharField(max_length=16, unique=True)
     image = models.ImageField(upload_to='profile', blank=True, default='')
     description = models.TextField(blank=True, default='')
-    
+    class SocialType(models.TextChoices):
+        KAKAO = 'Ka', _('Kakao')
+        GOOGLE = 'Go', _('Google')
+
+    social_type = models.CharField(
+        max_length=2,
+        choices=SocialType.choices,
+        default=SocialType.KAKAO,
+    )
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
