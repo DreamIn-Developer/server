@@ -12,11 +12,15 @@ class Post(models.Model):
         TEAM = 'Te', _('Team')
         INDIVIDUAL = 'In', _('Individual')
 
-    member_type = models.CharField(
+    post_type = models.CharField(
         max_length=2,
         choices=PostType.choices,
         default=PostType.INDIVIDUAL,
     )
+
+    @property
+    def comment_count(self):
+        return self.comment_set.count()
 
 class Comment(models.Model):
     author = models.ForeignKey('accounts.User', on_delete=models.CASCADE)

@@ -38,7 +38,8 @@ class UserViewSet(mixins.RetrieveModelMixin,
         if error is not None:
             raise JSONDecodeError(error)
         user = User.objects.get(social_id=social_id)
-        data['access_token'] = generate_access_token(user.social_id)
+        access_token = generate_access_token(user.social_id)
+        data['access_token'] = access_token
         data['id'] = user.id
         data['nickname'] = user.nickname
         return Response(data, status=status.HTTP_200_OK)
@@ -57,4 +58,5 @@ class UserViewSet(mixins.RetrieveModelMixin,
             raise JSONDecodeError(error)
         user = User.objects.create(social_id=social_id)
         data['access_token'] = generate_access_token(user.social_id)
+
         return Response(data, status=status.HTTP_201_CREATED)
