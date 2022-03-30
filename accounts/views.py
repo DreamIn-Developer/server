@@ -87,7 +87,7 @@ class UserViewSet(viewsets.ModelViewSet):
             error = user_json.get("error")
             if error is not None:
                 raise JSONDecodeError(error)
-            user = User.objects.create(social_id=social_id)
+            user = User.objects.create(social_id=social_id, social_type='Google')
             data['access_token'] = generate_access_token(user.social_id)
 
             return Response(data, status=status.HTTP_201_CREATED)
