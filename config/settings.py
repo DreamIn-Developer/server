@@ -57,6 +57,7 @@ THIRD_PARTY_APPS = [
     'corsheaders',
 
     'debug_toolbar',
+    'drf_yasg',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS

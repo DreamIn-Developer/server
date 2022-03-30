@@ -1,11 +1,8 @@
-from django.shortcuts import render
-from requests import Response
+from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-
 from posts.models import Post, Comment
 from posts.seirlaizers import PostSerializer, PostSummarizeSerializer, CommentSerializer
-
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -13,6 +10,8 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'list':
             return PostSummarizeSerializer
+        elif self.action == 'comments':
+            return CommentSerializer
         else:
             return PostSerializer
 
