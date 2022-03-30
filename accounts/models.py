@@ -20,6 +20,7 @@ class UserManager(BaseUserManager):
             nickname=nickname,
             description=description,
             image=image,
+            **kwargs,
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -46,6 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     nickname = models.CharField(max_length=16, unique=True)
     image = models.ImageField(upload_to='profile', blank=True, default='')
     description = models.TextField(blank=True, default='')
+    social_id = models.TextField()
     class SocialType(models.TextChoices):
         KAKAO = 'Ka', _('Kakao')
         GOOGLE = 'Go', _('Google')

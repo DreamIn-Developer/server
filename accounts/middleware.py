@@ -14,8 +14,9 @@ class JsonWebTokenMiddleWare(object):
     def __call__(self, request):
         try:
             if (
-                request.path != "/api/users/signup"
-                and request.path != "/api/users/login"
+                request.path != "/api/users/login_kakao"
+                and request.path != "/api/users/signup_kakao"
+                and request.path != "/api/users/check_nickname"
                 and "admin" not in request.path
                 and "swagger" not in request.path
                 and request.method not in SAFE_METHODS
@@ -27,11 +28,11 @@ class JsonWebTokenMiddleWare(object):
                     raise PermissionDenied()
 
                 payload = decode_jwt(access_token)
-                email = payload.get("email", None)
+                social_id = payload.get("social_id", None)
 
-                if not email:
+                if not social_id:
                     raise PermissionDenied()
-                User.objects.get(email=email)
+                User.objects.get(social_id=social_id)
             response = self.get_response(request)
 
             return response

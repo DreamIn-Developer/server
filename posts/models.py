@@ -7,6 +7,7 @@ class Post(models.Model):
     image = models.ImageField(upload_to='post', blank=True, default='')
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
     class PostType(models.TextChoices):
         TEAM = 'Te', _('Team')
         INDIVIDUAL = 'In', _('Individual')

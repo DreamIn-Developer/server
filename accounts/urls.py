@@ -1,7 +1,11 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
-from accounts.views import LoginView
+from accounts.views import UserViewSet
+
+router = DefaultRouter(trailing_slash=False)
+router.register(r'users', UserViewSet, basename='users')
 
 urlpatterns = [
-    path('login/kakao', LoginView.as_view())
+    path('', include(router.urls)),
 ]

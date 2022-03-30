@@ -29,6 +29,6 @@ class JSONWebTokenAuthentication(BaseAuthentication):
         except jwt.InvalidTokenError:
             raise exceptions.AuthenticationFailed()
 
-        email = payload['email']
-        user = User.objects.get(email=email)
+        social_id = payload['social_id']
+        user = User.objects.get(social_id=social_id)
         return (user, payload)
