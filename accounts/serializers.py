@@ -12,3 +12,12 @@ class UserSerializer(serializers.ModelSerializer):
             'description',
             'image',
         )
+
+class SocialLoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'social_type',
+            'social_id'
+        )

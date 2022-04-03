@@ -1,6 +1,10 @@
+import random
+
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import PermissionsMixin, User
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
 class UserManager(BaseUserManager):
@@ -71,3 +75,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         ordering = ['-id']
+
+@receiver(post_save, sender=User)
+def create_user(sender, instance, created, *args, **kwargs):
+    if created:
+        result = ""
+        chars = 'abcdefghijklmnopqrstuvwxyz'
+        for i in range(6):
+            result += random.choice(chars)
+        instance.nickname = result
+        instance.save()
