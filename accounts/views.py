@@ -86,7 +86,7 @@ class UserViewSet(viewsets.ModelViewSet):
         user_req = requests.get(f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={access_token}")
         user_json = user_req.json()
         print(user_json)
-        social_id = user_json.get('id')
+        social_id = user_json.get('user_id')
         error = user_json.get("error")
         if error is not None:
             raise JSONDecodeError(error)
