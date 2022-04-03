@@ -27,7 +27,6 @@ class TeamProfile(models.Model):
         'accounts.User',
         through='teams.Member',
         through_fields=('team', 'member'), )
-    post
 
 @receiver(post_save, sender=TeamProfile)
 def create_team_member(sender, instance, created, **kwargs):
