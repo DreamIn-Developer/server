@@ -79,9 +79,5 @@ class User(AbstractBaseUser, PermissionsMixin):
 @receiver(post_save, sender=User)
 def create_user(sender, instance, created, *args, **kwargs):
     if created:
-        result = ""
-        chars = 'abcdefghijklmnopqrstuvwxyz'
-        for i in range(6):
-            result += random.choice(chars)
-        instance.nickname = result
+        instance.nickname = f'드림인{instance.id}'
         instance.save()

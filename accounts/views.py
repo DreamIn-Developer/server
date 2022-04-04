@@ -1,14 +1,19 @@
 import json
 from json import JSONDecodeError
 import requests
-from rest_framework import status, viewsets
+from rest_framework import status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
+
 from accounts.jwt import generate_access_token
 from accounts.models import User
 from accounts.serializers import UserSerializer
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(mixins.RetrieveModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin,
+                   mixins.ListModelMixin,GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
