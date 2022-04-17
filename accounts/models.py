@@ -1,7 +1,5 @@
-import random
-
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-from django.contrib.auth.models import PermissionsMixin, User
+from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -48,10 +46,23 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
     email = models.EmailField(max_length=255,unique=True,)
-    nickname = models.CharField(max_length=16, unique=True)
+    nickname = models.CharField(max_length=15, unique=True)
     image = models.ImageField(upload_to='profile', blank=True, default='')
     description = models.TextField(blank=True, default='')
     social_id = models.TextField()
+
+    class MainCategoryType(models.TextChoices):
+        ART = 'artDesign'
+        MUSIC = 'music'
+        MEDIA = 'media'
+        SHOW = 'show'
+
+    main_category = models.CharField(
+        max_length=15,
+        choices=MainCategoryType.choices,
+        default=MainCategoryType.ART,
+    )
+
     class SocialType(models.TextChoices):
         KAKAO = 'Ka', _('Kakao')
         GOOGLE = 'Go', _('Google')
@@ -61,6 +72,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         choices=SocialType.choices,
         default=SocialType.KAKAO,
     )
+
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
@@ -73,6 +85,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_staff(self):
         return self.is_admin
 
+    @property
+    def post_count(self):
+        return self.post_set.count()
+
+    @property
+    def scrap_count(self):
+        return self.bookmark_set.count()
+
+    @property
+    def following_count(self):
+        return self.follower.count()
+
+    @property
+    def follower_count(self):
+        return self.followed_user.count()
+
     class Meta:
         ordering = ['-id']
 
@@ -81,3 +109,7 @@ def create_user(sender, instance, created, *args, **kwargs):
     if created:
         instance.nickname = f'드림인{instance.id}'
         instance.save()
+
+class FollowRelation(models.Model):
+    follower = models.ForeignKey('accounts.User', related_name='follower', on_delete=models.CASCADE)
+    following = models.ForeignKey('accounts.User', related_name='followed_user', on_delete=models.CASCADE)

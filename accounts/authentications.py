@@ -11,10 +11,8 @@ class JSONWebTokenAuthentication(BaseAuthentication):
     def authenticate(self, request):
         headers = request.headers
         jwt_value = headers.get("Authorization", None)
-
         if jwt_value is None:
             return None
-
         try:
             payload = decode_jwt(jwt_value)
 

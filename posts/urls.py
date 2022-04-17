@@ -3,10 +3,12 @@ from rest_framework.routers import DefaultRouter
 
 from .views import PostViewSet, CommentViewSet
 
-router = DefaultRouter(trailing_slash=False)
-router.register(r'posts', PostViewSet, basename='post')
-router.register(r'comments', CommentViewSet, basename='comment')
-
+posts_router = DefaultRouter(trailing_slash=False)
+posts_router.register(r'posts', PostViewSet, basename='post')
+comments_router = DefaultRouter(trailing_slash=False)
+comments_router.register(r'comments', CommentViewSet, basename='comment')
+bookmark_router = DefaultRouter(trailing_slash=False)
 urlpatterns = [
-    path("", include(router.urls)),
+    path("", include(posts_router.urls)),
+    path("", include(comments_router.urls)),
 ]
