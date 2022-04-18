@@ -77,3 +77,4 @@ class TeamViewSet(viewsets.ModelViewSet):
         queryset = Member.objects.filter(team_id=pk, member_type='pended')
         serializer = MemberSummarizeSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+

@@ -3,7 +3,6 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
-from notifications.models import Notification
 
 class Member(models.Model, DirtyFieldsMixin):
     team = models.ForeignKey('teams.TeamProfile', on_delete=models.CASCADE, related_name='joined_team')
@@ -62,8 +61,3 @@ class TeamFollowRelation(models.Model):
 def create_team_member(sender, instance, created, **kwargs):
     if created:
         Member.objects.create(team=instance, member=instance.leader, member_type='Le')
-
-@receiver(post_save, sender=Member)
-def create_member_notification(sender, instance, created, **kwargs):
-    if created:
-        Notification.objects.create(user=instance.member, messages=f"{instance.team.title}에 초대되었습니다.")

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, FollowRelation
+from .models import User, FollowRelation, Category
 
 
 class FollowSerializer(serializers.ModelSerializer):
@@ -14,12 +14,22 @@ class FollowSerializer(serializers.ModelSerializer):
             'following',
         )
 
-    def create(self, validated_data):
+    def create(self,instance, validated_data):
         validated_data["follower"] = self.context.get("request").user
         validated_data["following_id"] = self.context.get("pk")
         return super().create(validated_data)
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = (
+            'id',
+            'main_category',
+            'sub_category',
+        )
+
 class UserSerializer(serializers.ModelSerializer):
+    categories = CategorySerializer(many=True,read_only=True)
     class Meta:
         model = User
         fields = (
@@ -28,7 +38,7 @@ class UserSerializer(serializers.ModelSerializer):
             'nickname',
             'description',
             'image',
-            'main_category',
+            'categories',
             'post_count',
             'scrap_count',
             'follower_count',

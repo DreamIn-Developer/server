@@ -4,12 +4,14 @@ import requests
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, mixins
 from rest_framework.decorators import action
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
 from accounts.jwt import generate_access_token
-from accounts.models import User
-from accounts.serializers import UserSerializer, FollowSerializer, SocialLoginSerializer
+from accounts.models import User, Category
+from accounts.serializers import UserSerializer, FollowSerializer, SocialLoginSerializer, CategorySerializer
 
 
 class UserViewSet(mixins.RetrieveModelMixin,
@@ -32,7 +34,21 @@ class UserViewSet(mixins.RetrieveModelMixin,
 
     @swagger_auto_schema(operation_summary="개인 프로필 수정 및 회원가입 폼 저장", operation_description='1차적으로 회원가입은 서버에 유효한 토큰을 보냈을때 가입되며 이후 회원가입폼 정보를 입력하게되면 저장할때 쓰이는 api입니다. 또한 추후 자신의 프로필정보를 수정할때도 이용됩니다.')
     def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
+        categories = request.data.get('categories', None)
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+        if categories:
+            for category in categories:
+                instance.categories.add(category)
+        return Response(serializer.data)
 
     @swagger_auto_schema(operation_summary="닉네임 중복체크",operation_description="/api/users/check_nickname?nickname=~~와 같이 요청해주면 됩니당~")
     @action(methods=['get'], detail=False)
@@ -115,3 +131,10 @@ class UserViewSet(mixins.RetrieveModelMixin,
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CategoryListAPIView(mixins.ListModelMixin,GenericAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request)

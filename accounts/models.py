@@ -110,6 +110,7 @@ class Category(models.Model):
         choices=MainCategoryType.choices,
         default=MainCategoryType.ART,
     )
+
     class SubCategoryType(models.TextChoices):
         FINE = '순수예술'
         RIDICULE = '조소/조각'
@@ -117,19 +118,36 @@ class Category(models.Model):
         ILLUSTRATION = '일러스트'
         INDUSTRIAL_DESIGN = '산업디자인'
         CONSTRUCT = '건축'
-        TRADITIONAL = '전통예술'
+        TRADITIONAL_ART = '전통예술'
+
         CLASSIC = '클래식'
         PIANO = '피아노'
         BAND = '밴드'
         COMPOSITION = '작사/작곡'
+        TRADITIONAL_MUSIC = '전통음악'
+        K_POP = 'K-POP'
 
+        MOTION_GRAPHIC = '모션그래픽'
+        PD = 'pd'
+        MOVIE = 'movie'
+        ANIMATION = 'animation'
+        THREE_D = '3D아트'
+        GAME_GRAPHIC = '게임그래픽'
+        PICTURE = '사진'
 
+        PERFORMANCE = '공연기획'
+        MODERN_DANCE = '현대무용'
+        ACTING = '연기'
+        SCENARIO = '각본/각색'
 
     sub_category = models.CharField(
         max_length=15,
         choices=SubCategoryType.choices,
         default=SubCategoryType.FINE,
     )
+
+    def __str__(self):
+        return self.sub_category
 
 class FollowRelation(models.Model):
     follower = models.ForeignKey('accounts.User', related_name='follower', on_delete=models.CASCADE)
