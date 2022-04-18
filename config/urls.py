@@ -17,12 +17,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 
 from django.urls import path, include, re_path
-import debug_toolbar
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
-from config import settings
+from config.settings import base
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -45,12 +44,9 @@ urlpatterns = [
     path('api/', include('notifications.urls')),
     path('api/', include('teams.urls')),
     path('api/', include('posts.urls')),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+ static(base.MEDIA_URL, document_root=base.MEDIA_ROOT)
 
-if settings.DEBUG:
-    urlpatterns += [
-        path('__debug__/', include(debug_toolbar.urls)),
-    ]
+
 
 urlpatterns += [
    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
