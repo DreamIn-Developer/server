@@ -31,6 +31,9 @@ class TeamPost(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.title
+
     @property
     def comment_count(self):
         return self.teamcomment_set.count()
@@ -41,3 +44,6 @@ class TeamComment(models.Model):
     post = models.ForeignKey('posts.TeamPost', on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.description

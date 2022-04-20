@@ -1,3 +1,12 @@
-from django.shortcuts import render
+from rest_framework import mixins
+from rest_framework.viewsets import GenericViewSet
 
-# Create your views here.
+from notifications.models import Notification
+from notifications.serializers import NotificationSerializer
+
+
+class NotificationViewSet(mixins.RetrieveModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.ListModelMixin,GenericViewSet):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
