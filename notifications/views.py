@@ -8,5 +8,6 @@ from notifications.serializers import NotificationSerializer
 class NotificationViewSet(mixins.RetrieveModelMixin,
                    mixins.UpdateModelMixin,
                    mixins.ListModelMixin,GenericViewSet):
+    lookup_field = 'notification_pk'
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer

@@ -8,6 +8,7 @@ from posts.seirlaizers import PostSerializer, PostSummarizeSerializer, CommentSe
 
 
 class PostViewSet(viewsets.ModelViewSet):
+    lookup_field = 'post_pk'
     queryset = Post.objects.all()
 
     def get_serializer_class(self):
@@ -56,6 +57,7 @@ class PostViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CommentViewSet(viewsets.ModelViewSet):
+    lookup_field = 'comment_pk'
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
 
@@ -81,6 +83,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
 
 class TeamPostViewSet(viewsets.ModelViewSet):
+    lookup_field = 'team_post_pk'
     queryset = TeamPost.objects.all()
 
     def get_serializer_class(self):
@@ -98,5 +101,6 @@ class TeamPostViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status.HTTP_200_OK)
 
 class TeamCommentViewSet(viewsets.ModelViewSet):
+    lookup_field = 'team_comment_pk'
     serializer_class = TeamCommentSerializer
     queryset = TeamComment.objects.all()

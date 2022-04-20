@@ -1,12 +1,16 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
+from rest_framework.viewsets import GenericViewSet
+
 from teams.models import TeamProfile, Member
-from teams.seirlaizers import TeamProfileSerializer, TeamFollowSerializer, ApplySerializer, MemberSummarizeSerializer
+from teams.seirlaizers import TeamProfileSerializer, TeamFollowSerializer, ApplySerializer, MemberSummarizeSerializer, \
+    MemberSerializer
 
 
 class TeamViewSet(viewsets.ModelViewSet):
+    lookup_field = 'team_pk'
     def get_queryset(self):
         user = self.request.user
         if self.action == 'list':
@@ -78,3 +82,8 @@ class TeamViewSet(viewsets.ModelViewSet):
         serializer = MemberSummarizeSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class MemberViewSet(mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin,GenericViewSet):
+    lookup_field = 'member_pk'
+    queryset = Member.objects.all()
+    serializer_class = MemberSerializer
