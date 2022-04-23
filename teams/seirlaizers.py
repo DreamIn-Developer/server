@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from teams.models import Member, TeamProfile, TeamFollowRelation
 
-
+# 이미 지원했을때를 고려해야함
 class ApplySerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
@@ -32,6 +32,7 @@ class MemberSerializer(serializers.ModelSerializer):
         validated_data["member"] = self.context.get("request").user
         return super().update(validated_data)
 
+# 이미 팔로우하고 있을때를 구별해야함
 class TeamFollowSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeamFollowRelation

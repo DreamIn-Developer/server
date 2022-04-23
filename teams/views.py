@@ -84,6 +84,5 @@ class TeamViewSet(viewsets.ModelViewSet):
 
 class MemberViewSet(mixins.UpdateModelMixin,
                    mixins.DestroyModelMixin,GenericViewSet):
-    lookup_field = 'member_pk'
     queryset = Member.objects.all()
     serializer_class = MemberSerializer

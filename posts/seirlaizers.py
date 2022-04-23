@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from posts.models import Post, Comment, BookMark, TeamPost, TeamComment
 
-
+# 이미 체크한 북마킹한 부분 피드백 필요!
 class BookMarkSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookMark

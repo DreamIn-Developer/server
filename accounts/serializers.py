@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from .models import User, FollowRelation, Category
 
-
+# 이미 팔로우하고 있을때를 구별해야함
+#
 class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         model = FollowRelation

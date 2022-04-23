@@ -135,6 +135,3 @@ class UserViewSet(mixins.RetrieveModelMixin,
 class CategoryListAPIView(mixins.ListModelMixin,GenericAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request)
