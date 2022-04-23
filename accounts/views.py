@@ -56,9 +56,15 @@ class UserViewSet(mixins.RetrieveModelMixin,
         nickname = request.query_params.get('nickname')
         try:
             _nickname = User.objects.get(nickname=nickname)
-            return Response(status=status.HTTP_409_CONFLICT)
+            res = {
+                'message':'check nickname ok'
+            }
+            return Response(res, status=status.HTTP_409_CONFLICT)
         except:
-            return Response(status=status.HTTP_200_OK)
+            res = {
+                'message': 'check nickname fail'
+            }
+            return Response(res, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(operation_summary="카카오 소셜로그인",request_body=SocialLoginSerializer)
     @action(methods=['post'], detail=False)
