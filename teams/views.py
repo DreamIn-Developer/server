@@ -86,3 +86,11 @@ class MemberViewSet(mixins.UpdateModelMixin,
                    mixins.DestroyModelMixin,GenericViewSet):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
+
+    @swagger_auto_schema(operation_summary="팀원 승인", operation_description='id값에 해당하는 멤버를 confirm 즉,팀원 수락을 하는 api입니다.')
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    @swagger_auto_schema(operation_summary="팀원 거부", operation_description='id 값에 해당하는 멤버를 거부하는 api입니다.')
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
