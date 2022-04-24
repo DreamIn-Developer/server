@@ -21,6 +21,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
+from accounts.views import ping
 from config.settings import base
 
 schema_view = get_schema_view(
@@ -44,6 +45,7 @@ urlpatterns = [
     path('api/', include('notifications.urls')),
     path('api/', include('teams.urls')),
     path('api/', include('posts.urls')),
+    path('', ping, name='root_url_confirm'),
 ]+ static(base.MEDIA_URL, document_root=base.MEDIA_ROOT)
 
 

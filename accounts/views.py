@@ -3,7 +3,7 @@ from json import JSONDecodeError
 import requests
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, mixins
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,6 +13,12 @@ from accounts.jwt import generate_access_token
 from accounts.models import User, Category
 from accounts.serializers import UserSerializer, FollowSerializer, SocialLoginSerializer, CategorySerializer
 
+@api_view(["GET"])
+def ping(request):
+    res = {
+        "server": "on"
+    }
+    return Response(res, status=status.HTTP_200_OK)
 
 class UserViewSet(mixins.RetrieveModelMixin,
                    mixins.UpdateModelMixin,
