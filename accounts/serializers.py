@@ -28,6 +28,11 @@ class CategorySerializer(serializers.ModelSerializer):
             'main_category',
             'sub_category',
         )
+        read_only_fields = (
+            'id',
+            'main_category',
+            'sub_category',
+        )
 
 class UserSerializer(serializers.ModelSerializer):
     categories = CategorySerializer(many=True,read_only=True)

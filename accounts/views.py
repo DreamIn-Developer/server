@@ -141,3 +141,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
 class CategoryListAPIView(mixins.ListModelMixin,GenericAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+    @swagger_auto_schema(operation_summary="회원가입폼의 카테고리 목록 조회", operation_description='회원가입 폼의 카테고리 목록을 조회하는 api입니다..')
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
