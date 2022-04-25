@@ -4,13 +4,11 @@ import requests
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, mixins
 from rest_framework.decorators import action, api_view
-from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
 from accounts.jwt import generate_access_token
-from accounts.models import User, Category
+from accounts.models import User, MainCategory
 from accounts.serializers import UserSerializer, FollowSerializer, SocialLoginSerializer, CategorySerializer
 
 @api_view(["GET"])
@@ -144,10 +142,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class CategoryListAPIView(mixins.ListModelMixin,GenericAPIView):
-    queryset = Category.objects.all()
+class CategoryAPIView(mixins.ListModelMixin,GenericViewSet):
+    queryset = MainCategory.objects.all()
     serializer_class = CategorySerializer
-
-    @swagger_auto_schema(operation_summary="회원가입폼의 카테고리 목록 조회", operation_description='회원가입 폼의 카테고리 목록을 조회하는 api입니다..')
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
+    pagination_class = None

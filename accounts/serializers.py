@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, FollowRelation, Category
+from .models import User, FollowRelation, MainCategory, SubCategory
 
 # 이미 팔로우하고 있을때를 구별해야함
 #
@@ -20,22 +20,33 @@ class FollowSerializer(serializers.ModelSerializer):
         validated_data["following_id"] = self.context.get("pk")
         return super().create(validated_data)
 
-class CategorySerializer(serializers.ModelSerializer):
+class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = SubCategory
+        fields = (
+            'id',
+            'name',
+        )
+
+class CategorySerializer(serializers.ModelSerializer):
+    sub_category = serializers.SerializerMethodField()
+    class Meta:
+        model = MainCategory
         fields = (
             'id',
             'main_category',
             'sub_category',
         )
         read_only_fields = (
-            'id',
             'main_category',
             'sub_category',
         )
+    def get_sub_category(self, obj):
+        serializer = SubCategorySerializer(obj.subcategory, many=True)
+        return serializer.data
 
 class UserSerializer(serializers.ModelSerializer):
-    categories = CategorySerializer(many=True,read_only=True)
+    categories = SubCategorySerializer(many=True,read_only=True)
     class Meta:
         model = User
         fields = (
@@ -44,6 +55,7 @@ class UserSerializer(serializers.ModelSerializer):
             'nickname',
             'description',
             'image',
+            'background_image',
             'categories',
             'post_count',
             'scrap_count',

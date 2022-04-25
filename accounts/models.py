@@ -47,9 +47,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255,unique=True,)
     nickname = models.CharField(max_length=15, unique=True)
     image = models.ImageField(upload_to='profile', blank=True, default='')
+    background_image = models.ImageField(upload_to='profile', blank=True, default='')
     description = models.TextField(blank=True, default='')
     social_id = models.TextField()
-    categories = models.ManyToManyField('accounts.Category')
+    categories = models.ManyToManyField('accounts.SubCategory')
 
     class SocialType(models.TextChoices):
         KAKAO = 'Ka', _('Kakao')
@@ -98,19 +99,27 @@ def create_user(sender, instance, created, *args, **kwargs):
         instance.nickname = f'드림인{instance.id}'
         instance.save()
 
-class Category(models.Model):
+class MainCategory(models.Model):
     class MainCategoryType(models.TextChoices):
         ART = '미술/디자인'
         MUSIC = '음악/작곡'
         MEDIA = '영상/미디어'
         SHOW = '무용/연극'
 
-    main_category = models.CharField(
+    name = models.CharField(
         max_length=15,
         choices=MainCategoryType.choices,
         default=MainCategoryType.ART,
     )
+    def __str__(self):
+        return self.name
 
+    @property
+    def main_category(self):
+        return self.name
+
+class SubCategory(models.Model):
+    main = models.ForeignKey('accounts.MainCategory', on_delete=models.CASCADE, related_name='subcategory')
     class SubCategoryType(models.TextChoices):
         FINE = '순수예술'
         RIDICULE = '조소/조각'
@@ -140,14 +149,14 @@ class Category(models.Model):
         ACTING = '연기'
         SCENARIO = '각본/각색'
 
-    sub_category = models.CharField(
+    name = models.CharField(
         max_length=15,
         choices=SubCategoryType.choices,
         default=SubCategoryType.FINE,
     )
 
     def __str__(self):
-        return self.sub_category
+        return self.name
 
 class FollowRelation(models.Model):
     follower = models.ForeignKey('accounts.User', related_name='follower', on_delete=models.CASCADE)

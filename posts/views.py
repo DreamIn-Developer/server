@@ -33,6 +33,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @swagger_auto_schema(operation_summary="개인 프로필 게시글 생성", operation_description='헤더 토큰 필수!')
     def create(self, request, *args, **kwargs):
+        print(request.data)
         return super().create(request, *args, **kwargs)
 
     @swagger_auto_schema(operation_summary="개인 프로필 게시글 수정",
