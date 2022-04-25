@@ -50,6 +50,8 @@ class UserViewSet(mixins.RetrieveModelMixin,
             # forcibly invalidate the prefetch cache on the instance.
             instance._prefetched_objects_cache = {}
         if categories:
+            categories = categories.split(',')
+            instance.categories.clear()
             for category in categories:
                 instance.categories.add(category)
         return Response(serializer.data)
@@ -76,6 +78,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
         data = {}
         accessToken = json.loads(request.body)
         access_token = accessToken['access_token']
+        print(access_token)
         user_req = requests.get(f"https://kapi.kakao.com/v2/user/me",
                                 headers={"Authorization": f"Bearer {access_token}"})
         user_json = user_req.json()

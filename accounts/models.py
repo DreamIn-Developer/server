@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def create_user(self, email, nickname, password, description, image, **kwargs):
+    def create_user(self, email, nickname, password, description, **kwargs):
 
         if not email:
             raise ValueError('must have user email')
@@ -21,21 +21,20 @@ class UserManager(BaseUserManager):
             email=email,
             nickname=nickname,
             description=description,
-            image=image,
             **kwargs,
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self,email, nickname, password=None, description=None, image=None, **kwargs):
+    def create_superuser(self,email, nickname, password=None, description=None, **kwargs):
 
         user = self.create_user(
             email = email,
             nickname=nickname,
             description='',
-            image='',
             password = password,
+            **kwargs,
         )
         user.is_admin = True
         user.is_superuser = True
@@ -46,8 +45,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
     email = models.EmailField(max_length=255,unique=True,)
     nickname = models.CharField(max_length=15, unique=True)
-    image = models.ImageField(upload_to='profile', blank=True, default='')
-    background_image = models.ImageField(upload_to='profile', blank=True, default='')
+    profile_image = models.ForeignKey('images.Image', on_delete=models.CASCADE, related_name='profile_image', null=True)
+    background_image = models.ForeignKey('images.Image', on_delete=models.CASCADE, related_name='background_image', null=True)
     description = models.TextField(blank=True, default='')
     social_id = models.TextField()
     categories = models.ManyToManyField('accounts.SubCategory')

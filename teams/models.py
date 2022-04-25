@@ -28,13 +28,14 @@ class Member(models.Model, DirtyFieldsMixin):
 
     @property
     def image(self):
-        return self.member.image.url
+        return self.member.image
 
 
 class TeamProfile(models.Model):
     title = models.CharField(max_length=31)
     description = models.TextField()
-    image = models.ImageField(upload_to='team', blank=True, default='')
+    team_profile_image = models.ForeignKey('images.Image', on_delete=models.CASCADE, related_name='team_profile_image', null=True)
+    background_image = models.ForeignKey('images.Image', on_delete=models.CASCADE, related_name='team_background_image', null=True)
     leader = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='team_leader')
     members = models.ManyToManyField(
         'accounts.User',

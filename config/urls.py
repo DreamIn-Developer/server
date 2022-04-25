@@ -46,7 +46,7 @@ urlpatterns = [
     path('api/', include('teams.urls')),
     path('api/', include('posts.urls')),
     path('', ping, name='root_url_confirm'),
-]+ static(base.MEDIA_URL, document_root=base.MEDIA_ROOT)
+]
 
 
 
