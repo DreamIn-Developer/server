@@ -29,4 +29,4 @@ class JSONWebTokenAuthentication(BaseAuthentication):
 
         social_id = payload['social_id']
         user = User.objects.get(social_id=social_id)
-        return (user, payload)
+        return (user, None)

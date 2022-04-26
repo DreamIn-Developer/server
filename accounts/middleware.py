@@ -21,7 +21,6 @@ class JsonWebTokenMiddleWare(object):
                 and "swagger" not in request.path
                 and request.method not in SAFE_METHODS
             ):
-
                 headers = request.headers
                 access_token = headers.get("Authorization", None)
                 if not access_token:

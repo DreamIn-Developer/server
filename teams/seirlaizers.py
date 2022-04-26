@@ -28,9 +28,6 @@ class MemberSerializer(serializers.ModelSerializer):
             'member',
             'member_type',
         )
-    def update(self, validated_data):
-        validated_data["member"] = self.context.get("request").user
-        return super().update(validated_data)
 
 # 이미 팔로우하고 있을때를 구별해야함
 class TeamFollowSerializer(serializers.ModelSerializer):
@@ -58,7 +55,8 @@ class TeamProfileSerializer(serializers.ModelSerializer):
             'title',
             'description',
             'leader',
-            'image',
+            'team_profile_image',
+            'background_image',
             'post_count',
             'member_count',
             'team_follow_count',

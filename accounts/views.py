@@ -63,12 +63,12 @@ class UserViewSet(mixins.RetrieveModelMixin,
         try:
             _nickname = User.objects.get(nickname=nickname)
             res = {
-                'message':'check nickname ok'
+                'message':'check nickname fail'
             }
             return Response(res, status=status.HTTP_409_CONFLICT)
         except:
             res = {
-                'message': 'check nickname fail'
+                'message': 'check nickname ok'
             }
             return Response(res, status=status.HTTP_200_OK)
 
@@ -110,6 +110,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
     def google(self, request):
         data = {}
         accessToken = json.loads(request.body)
+        print(accessToken)
         access_token = accessToken['access_token']
         user_req = requests.get(f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={access_token}")
         user_json = user_req.json()

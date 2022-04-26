@@ -10,13 +10,12 @@ from teams.seirlaizers import TeamProfileSerializer, TeamFollowSerializer, Apply
 
 
 class TeamViewSet(viewsets.ModelViewSet):
-    lookup_field = 'team_pk'
     def get_queryset(self):
         user = self.request.user
         if self.action == 'list':
             return TeamProfile.objects.filter(members=user)
         else:
-            TeamProfile.objects.all()
+            return TeamProfile.objects.all()
 
     def get_serializer_class(self):
         if self.action == 'follow':
@@ -71,7 +70,8 @@ class TeamViewSet(viewsets.ModelViewSet):
     @swagger_auto_schema(operation_summary="팀원 조회", operation_description='해당 팀의 속해있는 멤버를 보는 api입니다.')
     @action(methods=['get'], detail=True)
     def members(self, request, pk):
-        queryset = Member.objects.filter(team_id = pk, member_type='confirmed')
+        queryset = Member.objects.filter(team_id=pk, member_type='confirmed')
+        print(queryset)
         serializer = MemberSummarizeSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

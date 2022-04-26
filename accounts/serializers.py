@@ -15,7 +15,7 @@ class FollowSerializer(serializers.ModelSerializer):
             'following',
         )
 
-    def create(self,instance, validated_data):
+    def create(self, validated_data):
         validated_data["follower"] = self.context.get("request").user
         validated_data["following_id"] = self.context.get("pk")
         return super().create(validated_data)
@@ -54,7 +54,7 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'nickname',
             'description',
-            'image',
+            'profile_image',
             'background_image',
             'categories',
             'post_count',
