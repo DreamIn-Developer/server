@@ -8,26 +8,23 @@ from django.utils.translation import gettext_lazy as _
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def create_user(self, email, nickname, password, description, **kwargs):
+    def create_user(self, email, nickname, password=None, **kwargs):
 
         if not email:
             raise ValueError('must have user email')
         if not nickname:
             raise ValueError('must have user nickname')
-        if not password:
-            raise ValueError('must have user password')
 
         user = self.model(
             email=email,
             nickname=nickname,
-            description=description,
             **kwargs,
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self,email, nickname, password=None, description=None, **kwargs):
+    def create_superuser(self,email, nickname, password=None, **kwargs):
 
         user = self.create_user(
             email = email,
@@ -43,7 +40,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
-    email = models.EmailField(max_length=255,unique=True,)
+    email = models.EmailField(max_length=255,unique=True)
     nickname = models.CharField(max_length=15, unique=True)
     profile_image = models.URLField(blank=True, default='')
     background_image = models.URLField(blank=True, default='')
