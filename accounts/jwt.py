@@ -14,8 +14,8 @@ def generate_access_token(social_id):
     iat = datetime.now()
     exp = iat + timedelta(days=7)
     data = {
-        "iat": iat.timestamp(),
-        "exp": exp.timestamp(),
+        #"iat": iat.timestamp(),
+        #"exp": exp.timestamp(),
         "social_id": social_id,
     }
     return encode_jwt(data)

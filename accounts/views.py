@@ -8,8 +8,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from accounts.jwt import generate_access_token
-from accounts.models import User, MainCategory
-from accounts.serializers import UserSerializer, FollowSerializer, SocialLoginSerializer, CategorySerializer
+from accounts.models import User, MainCategory, FollowRelation
+from accounts.serializers import UserSerializer, SocialLoginSerializer, CategorySerializer
 
 @api_view(["GET"])
 def ping(request):
@@ -22,11 +22,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
                    mixins.UpdateModelMixin,
                    mixins.ListModelMixin,GenericViewSet):
     queryset = User.objects.all()
-    def get_serializer_class(self):
-        if self.action == 'follow':
-            return FollowSerializer
-        else:
-            return UserSerializer
+    serializer_class = UserSerializer
 
     @swagger_auto_schema(operation_summary="메인 페이지(유저 리스트)", operation_description='메인 페이지의 컨텐츠로 이용될 유저 리스트입니다.')
     def list(self,request,*args, **kwargs):
@@ -63,7 +59,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
         try:
             _nickname = User.objects.get(nickname=nickname)
             res = {
-                'message':'check nickname fail'
+                'message': 'check nickname fail'
             }
             return Response(res, status=status.HTTP_409_CONFLICT)
         except:
@@ -140,11 +136,14 @@ class UserViewSet(mixins.RetrieveModelMixin,
     @swagger_auto_schema(operation_summary="유저 팔로우", operation_description='헤더의 토큰값을 필수로 넣어주세요')
     @action(methods=['post'], detail=True)
     def follow(self, request, pk):
-        serializer = FollowSerializer(data=request.data, context={'request':request, 'pk':pk})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        follow = FollowRelation.objects.filter(follower=request.user, following_id=pk).first()
+        if follow:
+            follow.delete()
+            return Response({'message': "cancel follow"},status=status.HTTP_204_NO_CONTENT)
+        elif follow is None:
+            FollowRelation.objects.create(follower=request.user, following_id=pk)
+            return Response({'message': 'success follow'}, status=status.HTTP_201_CREATED)
+        return Response({'error_message': 'request data error'}, status=status.HTTP_400_BAD_REQUEST)
 
 class CategoryAPIView(mixins.ListModelMixin,GenericViewSet):
     queryset = MainCategory.objects.all()
