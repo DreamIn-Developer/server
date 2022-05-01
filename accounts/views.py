@@ -126,7 +126,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
         follow = FollowRelation.objects.filter(follower=request.user, following_id=pk).first()
         if follow:
             follow.delete()
-
+            return Response({'message': "cancel follow"}, status=status.HTTP_204_NO_CONTENT)
         elif follow is None:
             FollowRelation.objects.create(follower=request.user, following_id=pk)
             return Response({'message': 'success follow'}, status=status.HTTP_201_CREATED)
