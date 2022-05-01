@@ -1,7 +1,8 @@
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
+
+from images.models import Image
 from posts.models import Post, Comment, TeamPost, TeamComment
 from posts.seirlaizers import PostSerializer, PostSummarizeSerializer, CommentSerializer, BookMarkSerializer, \
     TeamPostSummarizeSerializer, TeamCommentSerializer, TeamPostSerializer

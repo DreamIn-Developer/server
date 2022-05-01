@@ -4,7 +4,7 @@ class Post(models.Model):
     author = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
     title = models.CharField(max_length=32)
     description = models.TextField()
-    image = models.ManyToManyField('images.Image')
+    images = models.ManyToManyField('images.Image')
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -27,7 +27,7 @@ class TeamPost(models.Model):
     team = models.ForeignKey('teams.TeamProfile', on_delete=models.CASCADE)
     title = models.CharField(max_length=32)
     description = models.TextField()
-    image = models.ManyToManyField('images.Image')
+    images = models.ManyToManyField('images.Image')
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
