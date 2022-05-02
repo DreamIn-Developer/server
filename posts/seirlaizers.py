@@ -52,6 +52,7 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class PostSummarizeSerializer(serializers.ModelSerializer):
+    images = ImageSerializer(read_only=True, many=True)
     class Meta:
         model = Post
         fields = (
