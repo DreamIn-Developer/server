@@ -19,6 +19,24 @@ class PostViewSet(viewsets.ModelViewSet):
         else:
             return PostSerializer
 
+    def create(self, request, *args, **kwargs):
+        images = request.data.get('images', None)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = self.perform_create(serializer)
+        if images:
+            for image in images:
+                _image = Image.objects.create(image=image)
+                instance.images.add(_image)
+        else:
+            instance
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        return instance
+
     @action(detail=True, methods=['get'])
     def comments(self, request, pk):
         comments = Comment.objects.filter(post__id=pk)
@@ -39,6 +57,7 @@ class PostViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
@@ -55,11 +74,30 @@ class TeamPostViewSet(viewsets.ModelViewSet):
         else:
             return TeamPostSerializer
 
+    def create(self, request, *args, **kwargs):
+        images = request.data.get('images', None)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = self.perform_create(serializer)
+        if images:
+            for image in images:
+                _image = Image.objects.create(image=image)
+                instance.images.add(_image)
+        else:
+            instance
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        return instance
+
     @action(detail=True, methods=['get'])
     def comments(self, request, pk):
         comments = TeamComment.objects.filter(post__id=pk)
         serializer = TeamCommentSerializer(comments, many=True, context={'request': request, 'pk': pk})
         return Response(serializer.data, status.HTTP_200_OK)
+
 
 class TeamCommentViewSet(viewsets.ModelViewSet):
     serializer_class = TeamCommentSerializer

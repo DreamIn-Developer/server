@@ -21,13 +21,16 @@ class BookMarkSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-class ImageSerializer(serializers.ListField):
-    images = serializers.CharField()
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = (
+            'image',
+        )
 
 
 class PostSerializer(serializers.ModelSerializer):
-    images = serializers.ListField(required=False)
-
+    images = ImageSerializer(read_only=True, many=True)
     class Meta:
         model = Post
         fields = (
@@ -53,7 +56,7 @@ class PostSummarizeSerializer(serializers.ModelSerializer):
         model = Post
         fields = (
             'id',
-            'image',
+            'images',
             'title',
             'created_at',
             'updated_at',
@@ -80,6 +83,7 @@ class CommentSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 class TeamPostSerializer(serializers.ModelSerializer):
+    images= ImageSerializer(read_only=True, many=True)
     class Meta:
         model = TeamPost
         fields = (
@@ -87,17 +91,18 @@ class TeamPostSerializer(serializers.ModelSerializer):
             'team',
             'title',
             'description',
-            'image',
+            'images',
             'updated_at',
             'created_at',
         )
 
 class TeamPostSummarizeSerializer(serializers.ModelSerializer):
+    images = ImageSerializer(read_only=True, many=True)
     class Meta:
         model = TeamPost
         fields = (
             'id',
-            'image',
+            'images',
             'title',
             'created_at',
             'updated_at',
