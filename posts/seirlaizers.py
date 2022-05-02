@@ -50,6 +50,10 @@ class PostSerializer(serializers.ModelSerializer):
         validated_data["author"] = self.context.get("request").user
         return super().create(validated_data)
 
+    def update(self, validated_data):
+        validated_data["author"] = self.context.get("request").user
+        return super().update(validated_data)
+
 
 class PostSummarizeSerializer(serializers.ModelSerializer):
     images = ImageSerializer(read_only=True, many=True)
