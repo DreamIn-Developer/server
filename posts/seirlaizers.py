@@ -50,9 +50,9 @@ class PostSerializer(serializers.ModelSerializer):
         validated_data["author"] = self.context.get("request").user
         return super().create(validated_data)
 
-    def update(self, validated_data):
+    def update(self, instance, validated_data):
         validated_data["author"] = self.context.get("request").user
-        return super().update(validated_data)
+        return super().update(instance, validated_data)
 
 
 class PostSummarizeSerializer(serializers.ModelSerializer):
