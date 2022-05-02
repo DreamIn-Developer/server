@@ -37,6 +37,25 @@ class PostViewSet(viewsets.ModelViewSet):
         instance = serializer.save()
         return instance
 
+    def update(self, request, *args, **kwargs):
+        images = request.data.get('images', None)
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        if images:
+            for image in images:
+                _image = Image.objects.get_or_create(image)
+                instance.images.clear()
+                instance.images.add(_image)
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
+
     @action(detail=True, methods=['get'])
     def comments(self, request, pk):
         comments = Comment.objects.filter(post__id=pk)
