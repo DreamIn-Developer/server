@@ -76,6 +76,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
             if user is None:
                 raise Exception
             access_token = generate_access_token(user.social_id)
+            data['message'] = 'login'
             data['access_token'] = access_token
             data['id'] = user.id
             data['nickname'] = user.nickname
@@ -84,6 +85,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
 
         except:
             user = User.objects.create_user(social_id=social_id, social_type='google', email=f'{social_id}@dream.com',nickname='example')
+            data['message'] = 'singup'
             data['access_token'] = generate_access_token(user.social_id)
             data['id'] = user.id
             data['nickname'] = user.nickname
@@ -107,6 +109,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
             if user is None:
                 raise Exception
             access_token = generate_access_token(user.social_id)
+            data['message'] = 'login'
             data['access_token'] = access_token
             data['id'] = user.id
             data['nickname'] = user.nickname
@@ -115,6 +118,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
 
         except:
             user = User.objects.create_user(social_id=social_id, social_type='google', email=f'{social_id}@dream.com', nickname='example')
+            data['message'] = 'signup'
             data['access_token'] = generate_access_token(user.social_id)
             data['id'] = user.id
             data['nickname'] = user.nickname
