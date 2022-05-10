@@ -10,6 +10,9 @@ from rest_framework.viewsets import GenericViewSet
 from accounts.jwt import generate_access_token
 from accounts.models import User, MainCategory, FollowRelation
 from accounts.serializers import UserSerializer, CategorySerializer
+from posts.models import Post
+from posts.seirlaizers import PostSummarizeSerializer
+
 
 @api_view(["GET"])
 def ping(request):
@@ -135,6 +138,12 @@ class UserViewSet(mixins.RetrieveModelMixin,
             FollowRelation.objects.create(follower=request.user, following_id=pk)
             return Response({'message': 'success follow'}, status=status.HTTP_201_CREATED)
         return Response({'error_message': 'request data error'}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['get'], detail=True)
+    def posts(self, request, pk):
+        queryset = Post.objects.filter(author_id=pk)
+        serializer = PostSummarizeSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CategoryAPIView(mixins.ListModelMixin,GenericViewSet):
