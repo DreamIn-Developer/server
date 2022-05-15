@@ -62,12 +62,6 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer = CommentSerializer(comments, many=True, context={'request': request, 'pk': pk})
         return Response(serializer.data, status.HTTP_200_OK)
 
-    @action(detail=False, methods=['get'])
-    def me(self, request):
-        posts = Post.objects.filter(author=request.user)
-        serializer = PostSummarizeSerializer(posts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
     @action(detail=True, methods=['post'])
     def scrap(self, request, pk):
         serializer = BookMarkSerializer(data=request.data, context={'request': request, 'pk': pk})

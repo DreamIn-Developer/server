@@ -21,7 +21,35 @@ class Comment(models.Model):
 
 class BookMark(models.Model):
     post = models.ForeignKey('posts.Post', on_delete=models.CASCADE, related_name='stored_post')
-    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
+    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='mark_user')
+
+    @property
+    def id(self):
+        return self.post.id
+
+    @property
+    def images(self):
+        return self.post.images
+
+    @property
+    def title(self):
+        return self.post.title
+
+    @property
+    def created_at(self):
+        return self.post.created_at
+
+    @property
+    def updated_at(self):
+        return self.post.updated_at
+
+    @property
+    def nickname(self):
+        return self.post.author.nickname
+
+    @property
+    def images(self):
+        return self.post.images.image
 
 class TeamPost(models.Model):
     team = models.ForeignKey('teams.TeamProfile', on_delete=models.CASCADE)

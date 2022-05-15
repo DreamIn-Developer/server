@@ -10,8 +10,8 @@ from rest_framework.viewsets import GenericViewSet
 from accounts.jwt import generate_access_token
 from accounts.models import User, MainCategory, FollowRelation
 from accounts.serializers import UserSerializer, CategorySerializer
-from posts.models import Post
-from posts.seirlaizers import PostSummarizeSerializer
+from posts.models import Post, BookMark
+from posts.seirlaizers import PostSummarizeSerializer, PostScrapSummarizeSerializer
 
 
 @api_view(["GET"])
@@ -142,7 +142,14 @@ class UserViewSet(mixins.RetrieveModelMixin,
     @action(methods=['get'], detail=True)
     def posts(self, request, pk):
         queryset = Post.objects.filter(author_id=pk)
+        print(queryset)
         serializer = PostSummarizeSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['get'], detail=True)
+    def scraps(self, request, pk):
+        post = BookMark.objects.filter(user_id=pk)
+        serializer = PostScrapSummarizeSerializer(post, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

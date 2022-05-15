@@ -54,6 +54,18 @@ class PostSerializer(serializers.ModelSerializer):
         validated_data["author"] = self.context.get("request").user
         return super().update(instance, validated_data)
 
+class PostScrapSummarizeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BookMark
+        fields = (
+            'id',
+            'title',
+            'nickname',
+            'created_at',
+            'updated_at',
+            'images',
+        )
 
 class PostSummarizeSerializer(serializers.ModelSerializer):
     images = ImageSerializer(read_only=True, many=True)
