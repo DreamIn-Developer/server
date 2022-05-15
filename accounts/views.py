@@ -12,6 +12,8 @@ from accounts.models import User, MainCategory, FollowRelation
 from accounts.serializers import UserSerializer, CategorySerializer
 from posts.models import Post, BookMark
 from posts.seirlaizers import PostSummarizeSerializer, PostScrapSummarizeSerializer
+from teams.models import TeamProfile
+from teams.seirlaizers import TeamProfileSerializer
 
 
 @api_view(["GET"])
@@ -150,6 +152,12 @@ class UserViewSet(mixins.RetrieveModelMixin,
     def scraps(self, request, pk):
         post = BookMark.objects.filter(user_id=pk)
         serializer = PostScrapSummarizeSerializer(post, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['get'], detail=False)
+    def teams(self, request):
+        teams = TeamProfile.objects.filter(members=request.user)
+        serializer = TeamProfileSerializer(teams, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
