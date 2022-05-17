@@ -76,7 +76,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def scrap_count(self):
-        return self.bookmark_set.count()
+        return self.mark_user.count()
 
     @property
     def following_count(self):
