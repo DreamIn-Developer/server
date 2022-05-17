@@ -3,6 +3,8 @@ from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.viewsets import GenericViewSet
 
+from posts.models import TeamPost
+from posts.seirlaizers import TeamPostSummarizeSerializer
 from teams.models import TeamProfile, Member, TeamFollowRelation
 from teams.seirlaizers import TeamProfileSerializer, TeamFollowSerializer, ApplySerializer, MemberSummarizeSerializer, \
     MemberSerializer
@@ -57,6 +59,12 @@ class TeamViewSet(viewsets.ModelViewSet):
     def pended_members(self, request, pk):
         queryset = Member.objects.filter(team_id=pk, member_type='pended')
         serializer = MemberSummarizeSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['get'], detail=True)
+    def posts(self, request, pk):
+        queryset = TeamPost.objects.filter(team_id=pk)
+        serializer = TeamPostSummarizeSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
