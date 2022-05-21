@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
 class Member(models.Model, DirtyFieldsMixin):
-    team = models.ForeignKey('teams.TeamProfile', on_delete=models.CASCADE, related_name='joined_team')
+    team = models.ForeignKey('teams.TeamProfile', on_delete=models.CASCADE, related_name='joined_team', unique=True)
     member = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='joined_user')
 
     class MemberType(models.TextChoices):
@@ -29,7 +29,6 @@ class Member(models.Model, DirtyFieldsMixin):
     @property
     def image(self):
         return self.member.image
-
 
 class TeamProfile(models.Model):
     title = models.CharField(max_length=31)

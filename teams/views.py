@@ -51,7 +51,9 @@ class TeamViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=True)
     def members(self, request, pk):
-        queryset = Member.objects.filter(team_id=pk, member_type='confirmed')
+        queryset = Member.objects.filter(team_id=pk, member_type='confirmed').values_list('member_id')
+
+        print(queryset)
         serializer = MemberSummarizeSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
