@@ -70,6 +70,11 @@ class PostViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=False, methods=['get'])
+    def main(self, request):
+        queryset = Post.objects.all().order_by('?')
+        serializer = PostSummarizeSerializer(queryset, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
