@@ -3,6 +3,7 @@ from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.viewsets import GenericViewSet
 
+from accounts.models import User
 from posts.models import TeamPost
 from posts.seirlaizers import TeamPostSummarizeSerializer
 from teams.models import TeamProfile, Member, TeamFollowRelation
@@ -51,9 +52,7 @@ class TeamViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=True)
     def members(self, request, pk):
-        queryset = Member.objects.filter(team_id=pk, member_type='confirmed').values_list('member_id')
-
-        print(queryset)
+        queryset = Member.objects.filter(team_id=pk, member_type='confirmed')
         serializer = MemberSummarizeSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

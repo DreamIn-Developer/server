@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
 class Member(models.Model, DirtyFieldsMixin):
-    team = models.ForeignKey('teams.TeamProfile', on_delete=models.CASCADE, related_name='joined_team', unique=True)
+    team = models.ForeignKey('teams.TeamProfile', on_delete=models.CASCADE, related_name='joined_team')
     member = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='joined_user')
 
     class MemberType(models.TextChoices):
@@ -19,6 +19,10 @@ class Member(models.Model, DirtyFieldsMixin):
     )
 
     @property
+    def user(self):
+        return self.member.id
+
+    @property
     def nickname(self):
         return self.member.nickname
 
@@ -28,10 +32,22 @@ class Member(models.Model, DirtyFieldsMixin):
 
     @property
     def image(self):
-        return self.member.image
+        return self.member.profile_image
+
+    @property
+    def category(self):
+        return self.member.categories.main.name
+
+    @property
+    def following_count(self):
+        return self.member.following_count
+
+    @property
+    def follower_count(self):
+        return self.member.follower_count
 
 class TeamProfile(models.Model):
-    title = models.CharField(max_length=31)
+    title = models.CharField(max_length=31, unique=True)
     description = models.TextField()
     team_profile_image = models.URLField(blank=True, default='')
     background_image = models.URLField(blank=True, default='')

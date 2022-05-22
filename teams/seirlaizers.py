@@ -47,7 +47,17 @@ class TeamFollowSerializer(serializers.ModelSerializer):
         validated_data["team_id"] = self.context.get("pk")
         return super().create(validated_data)
 
+class ApplyCheckSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Member
+        fields = (
+            'user',
+            'member_type',
+        )
+
 class TeamProfileSerializer(serializers.ModelSerializer):
+    check_applied = serializers.SerializerMethodField()
+
     class Meta:
         model = TeamProfile
         fields = (
@@ -60,6 +70,7 @@ class TeamProfileSerializer(serializers.ModelSerializer):
             'post_count',
             'member_count',
             'team_follow_count',
+            'check_applied',
         )
         read_only_fields=(
             'leader',
@@ -72,6 +83,10 @@ class TeamProfileSerializer(serializers.ModelSerializer):
         validated_data["leader"] = self.context.get("request").user
         return super().create(validated_data)
 
+    def get_check_applied(self,obj):
+        member = Member.objects.filter(team=obj)
+        serializer = ApplyCheckSerializer(member, many=True)
+        return serializer.data
 
 class MemberSummarizeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -82,6 +97,9 @@ class MemberSummarizeSerializer(serializers.ModelSerializer):
             'post_count',
             'image',
             'member_type',
+            'category',
+            'following_count',
+            'follower_count',
         )
         read_only_fields = (
             'id',

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, MainCategory, SubCategory
+from .models import User, MainCategory, SubCategory, FollowRelation
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
@@ -32,7 +32,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    categories = SubCategorySerializer(many=True,read_only=True)
+    categories = SubCategorySerializer(many=True, read_only=True)
+    is_followed = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -48,13 +49,26 @@ class UserSerializer(serializers.ModelSerializer):
             'scrap_count',
             'follower_count',
             'following_count',
+            'is_followed',
         )
         read_only_fields = (
             'post_count',
             'scrap_count',
             'follower_count',
             'following_count',
+            'is_followed',
         )
+
+    def get_is_followed(self, obj):
+        login_user = self.context.get("request").user.id
+        if login_user != None:
+            is_followed = FollowRelation.objects.filter(follower=obj, following_id=login_user).first()
+            if is_followed is None:
+                return False
+            else:
+                return True
+        else:
+            return False
 
 
 class SocialLoginSerializer(serializers.ModelSerializer):
