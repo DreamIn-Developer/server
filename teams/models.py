@@ -76,4 +76,4 @@ class TeamFollowRelation(models.Model):
 @receiver(post_save, sender=TeamProfile)
 def create_team_member(sender, instance, created, **kwargs):
     if created:
-        Member.objects.create(team=instance, member=instance.leader, member_type='CONFIRMED')
+        Member.objects.create(team=instance, member=instance.leader, member_type='confirmed')
