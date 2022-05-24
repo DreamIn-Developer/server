@@ -1,5 +1,6 @@
 from dirtyfields import DirtyFieldsMixin
 from django.db import models
+from django.db.models import F
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
@@ -36,7 +37,7 @@ class Member(models.Model, DirtyFieldsMixin):
 
     @property
     def category(self):
-        return self.member.categories.main.name
+        return self.member.categories.annotate(main_category=F('main__name')).values('main_category')
 
     @property
     def following_count(self):
