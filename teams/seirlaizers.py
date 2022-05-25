@@ -92,7 +92,7 @@ class MemberSummarizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
         fields = (
-            'id',
+            'user',
             'nickname',
             'post_count',
             'image',
