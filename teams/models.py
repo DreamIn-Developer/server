@@ -37,7 +37,7 @@ class Member(models.Model, DirtyFieldsMixin):
 
     @property
     def category(self):
-        return self.member.categories.annotate(main_category=F('main__name')).values('main_category')
+        return self.member.categories.annotate(main_category=F('main__name')).values('main_category').distinct()
 
     @property
     def following_count(self):

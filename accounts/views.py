@@ -89,7 +89,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
             return Response(data, status=status.HTTP_200_OK)
 
         except:
-            user = User.objects.create_user(social_id=social_id, social_type='google', email=f'{social_id}@dream.com',nickname='example')
+            user = User.objects.create_user(social_id=social_id, social_type='google', nickname='example')
             data['message'] = 'singup'
             data['access_token'] = generate_access_token(user.social_id)
             data['id'] = user.id
@@ -102,7 +102,6 @@ class UserViewSet(mixins.RetrieveModelMixin,
         data = {}
         accessToken = json.loads(request.body)
         access_token = accessToken['access_token']
-        print(access_token)
         user_req = requests.get(f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={access_token}")
         user_json = user_req.json()
         social_id = user_json.get('user_id')
@@ -122,7 +121,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
             return Response(data, status=status.HTTP_200_OK)
 
         except:
-            user = User.objects.create_user(social_id=social_id, social_type='google', email=f'{social_id}@dream.com', nickname='example')
+            user = User.objects.create_user(social_id=social_id, social_type='google', nickname='example')
             data['message'] = 'signup'
             data['access_token'] = generate_access_token(user.social_id)
             data['id'] = user.id
