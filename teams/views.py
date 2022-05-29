@@ -3,7 +3,6 @@ from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.viewsets import GenericViewSet
 
-from accounts.models import User
 from posts.models import TeamPost
 from posts.seirlaizers import TeamPostSummarizeSerializer
 from teams.models import TeamProfile, Member, TeamFollowRelation
