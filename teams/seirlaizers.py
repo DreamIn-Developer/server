@@ -97,7 +97,27 @@ class MemberSummarizeSerializer(serializers.ModelSerializer):
             'post_count',
             'image',
             'member_type',
-            'category',
+            'main_category',
+            'following_count',
+            'follower_count',
+        )
+        read_only_fields = (
+            'id',
+            'nickname',
+            'post_count',
+            'image',
+        )
+
+class MemberprofileSummarizeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Member
+        fields = (
+            'user',
+            'nickname',
+            'post_count',
+            'image',
+            'member_type',
+            'sub_category',
             'following_count',
             'follower_count',
         )

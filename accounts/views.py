@@ -48,7 +48,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
                 instance.categories.add(category)
         return Response(serializer.data)
 
-    @action(methods=['get'], detail=False)
+    @action(methods=['get'], detail=False, url_path='check-nickname')
     def check_nickname(self, request):
         nickname = request.query_params.get('nickname')
         try:
@@ -143,7 +143,6 @@ class UserViewSet(mixins.RetrieveModelMixin,
     @action(methods=['get'], detail=True)
     def posts(self, request, pk):
         queryset = Post.objects.filter(author_id=pk)
-        print(queryset)
         serializer = PostSummarizeSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

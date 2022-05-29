@@ -7,7 +7,7 @@ from posts.models import TeamPost
 from posts.seirlaizers import TeamPostSummarizeSerializer
 from teams.models import TeamProfile, Member, TeamFollowRelation
 from teams.seirlaizers import TeamProfileSerializer, TeamFollowSerializer, ApplySerializer, MemberSummarizeSerializer, \
-    MemberSerializer
+    MemberSerializer, MemberprofileSummarizeSerializer
 
 
 class TeamViewSet(viewsets.ModelViewSet):
@@ -49,13 +49,19 @@ class TeamViewSet(viewsets.ModelViewSet):
             return Response({'message': 'success applying'}, status=status.HTTP_201_CREATED)
         return Response({'error_message': 'request data error'}, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(methods=['get'], detail=True)
-    def members(self, request, pk):
+    @action(methods=['get'], detail=True, url_path='settings/members')
+    def settings_members(self, request, pk):
         queryset = Member.objects.filter(team_id=pk, member_type='confirmed')
         serializer = MemberSummarizeSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @action(methods=['get'], detail=True)
+    @action(methods=['get'], detail=True, url_path='profile/members')
+    def profile_members(self, request, pk):
+        queryset = Member.objects.filter(team_id=pk, member_type='confirmed')
+        serializer = MemberprofileSummarizeSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['get'], detail=True, url_path='pended-members')
     def pended_members(self, request, pk):
         queryset = Member.objects.filter(team_id=pk, member_type='pended')
         serializer = MemberSummarizeSerializer(queryset, many=True)

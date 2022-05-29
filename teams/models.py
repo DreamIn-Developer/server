@@ -36,8 +36,12 @@ class Member(models.Model, DirtyFieldsMixin):
         return self.member.profile_image
 
     @property
-    def category(self):
+    def main_category(self):
         return self.member.categories.annotate(main_category=F('main__name')).values('main_category').distinct()
+
+    @property
+    def sub_category(self):
+        return self.member.categories.annotate(sub_category=F('name')).values('sub_category')
 
     @property
     def following_count(self):
