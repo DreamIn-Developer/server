@@ -20,6 +20,7 @@ from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
 from accounts.views import ping
+from config.settings import develop
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -43,6 +44,12 @@ urlpatterns = [
     path('api/', include('posts.urls')),
     path('', ping, name='root_url_confirm'),
 ]
+
+if develop.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ]
 
 urlpatterns += [
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),

@@ -56,10 +56,16 @@ THIRD_PARTY_APPS = [
     'corsheaders',
 
     'drf_yasg',
+    'django_extensions',
 
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
+
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
 
 CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:3000',
                          'http://localhost:3000',
@@ -82,7 +88,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'accounts.middleware.JsonWebTokenMiddleWare',
 ]
 
