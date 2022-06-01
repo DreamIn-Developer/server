@@ -64,7 +64,7 @@ class TeamProfile(models.Model):
 
     @property
     def member_count(self):
-        return self.joined_team.count()
+        return self.joined_team.filter(member_type='confirmed').count()
 
     @property
     def post_count(self):
