@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 
 from images.models import Image
 from posts.models import Post, Comment, TeamPost, TeamComment, BookMark
-from posts.seirlaizers import PostSerializer, PostSummarizeSerializer, CommentSerializer, BookMarkSerializer, \
+from posts.seirlaizers import PostSerializer, PostSummarizeSerializer, CommentSerializer, \
     TeamPostSummarizeSerializer, TeamCommentSerializer, TeamPostSerializer
 
 
