@@ -61,7 +61,7 @@ class UserSerializer(serializers.ModelSerializer):
     def get_is_followed(self, obj):
         login_user = self.context.get("request").user.id
         if login_user != None:
-            is_followed = FollowRelation.objects.filter(follower=obj, following_id=login_user).first()
+            is_followed = FollowRelation.objects.filter(follower=login_user, following_id=obj).first()
             if is_followed is None:
                 return False
             else:
