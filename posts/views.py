@@ -3,7 +3,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 
 from images.models import Image
-from posts.models import Post, Comment, TeamPost, TeamComment
+from posts.models import Post, Comment, TeamPost, TeamComment, BookMark
 from posts.seirlaizers import PostSerializer, PostSummarizeSerializer, CommentSerializer, BookMarkSerializer, \
     TeamPostSummarizeSerializer, TeamCommentSerializer, TeamPostSerializer
 
@@ -64,17 +64,21 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def scrap(self, request, pk):
-        serializer = BookMarkSerializer(data=request.data, context={'request': request, 'pk': pk})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        scrap = BookMark.objects.filter(user=request.user, post_id=pk).filter()
+        if scrap:
+            scrap.delete()
+            return Response({'message': "cancel follow"}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            BookMark.objects.create(user=request.user, post_id=pk)
+            return Response({'message': 'success follow'}, status=status.HTTP_201_CREATED)
+        return Response({'error_message': 'request data error'}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['get'])
     def main(self, request):
         queryset = Post.objects.all().order_by('?')
         serializer = PostSummarizeSerializer(queryset, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer

@@ -3,23 +3,6 @@ from rest_framework import serializers
 from images.models import Image
 from posts.models import Post, Comment, BookMark, TeamPost, TeamComment
 
-# 이미 체크한 북마킹한 부분 피드백 필요!
-class BookMarkSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BookMark
-        fields = (
-            'post',
-            'user',
-        )
-        read_only_fields = (
-            'post',
-            'user',
-        )
-    def create(self, validated_data):
-        validated_data["user"] = self.context.get("request").user
-        validated_data["post_id"] = self.context.get("pk")
-        return super().create(validated_data)
-
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
