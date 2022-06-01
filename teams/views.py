@@ -45,7 +45,7 @@ class TeamViewSet(viewsets.ModelViewSet):
         if applying:
             return Response({'message': 'applied member'}, status=status.HTTP_409_CONFLICT)
         elif applying is None:
-            Member.objects.create(team_id=pk, memeber=request.user)
+            Member.objects.create(team_id=pk, member=request.user)
             return Response({'message': 'success applying'}, status=status.HTTP_201_CREATED)
         return Response({'error_message': 'request data error'}, status=status.HTTP_400_BAD_REQUEST)
 
