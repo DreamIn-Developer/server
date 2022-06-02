@@ -1,5 +1,5 @@
 # Dreamin_server
-### 현재 개발중인 단계입니다.
+### 현재 개발중인 단계입니다.(api:80%, devops:50%)
 
 ## 개발 스택
 ### Back-end <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=Python&logoColor=white"/> <img src="https://img.shields.io/badge/Django-092E20?style=flat-square&logo=Django&logoColor=white"/>
