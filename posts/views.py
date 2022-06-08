@@ -64,7 +64,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def scrap(self, request, pk):
-        scrap = BookMark.objects.filter(user=request.user, post_id=pk).filter()
+        scrap = BookMark.objects.filter(user=request.user, post_id=pk).first()
         if scrap:
             scrap.delete()
             return Response({'message': "cancel follow"}, status=status.HTTP_204_NO_CONTENT)

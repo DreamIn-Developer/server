@@ -20,6 +20,10 @@ class Member(models.Model, DirtyFieldsMixin):
     )
 
     @property
+    def member_id(self):
+        return self.id
+
+    @property
     def user(self):
         return self.member.id
 
