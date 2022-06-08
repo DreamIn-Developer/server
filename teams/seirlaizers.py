@@ -89,6 +89,8 @@ class TeamProfileSerializer(serializers.ModelSerializer):
         return serializer.data
 
 class MemberSummarizeSerializer(serializers.ModelSerializer):
+    member_id = serializers.SerializerMethodField()
+    user_id = serializers.SerializerMethodField()
     class Meta:
         model = Member
         fields = (
@@ -108,8 +110,16 @@ class MemberSummarizeSerializer(serializers.ModelSerializer):
             'post_count',
             'image',
         )
+        
+    def get_user_id(self,obj):
+        return obj.member.id
+
+    def get_member_id(self,obj):
+        return obj.id
 
 class MemberprofileSummarizeSerializer(serializers.ModelSerializer):
+    member_id = serializers.SerializerMethodField()
+    user_id = serializers.SerializerMethodField()
     class Meta:
         model = Member
         fields = (
@@ -129,3 +139,9 @@ class MemberprofileSummarizeSerializer(serializers.ModelSerializer):
             'post_count',
             'image',
         )
+
+    def get_user_id(self,obj):
+        return obj.member.id
+
+    def get_member_id(self,obj):
+        return obj.id

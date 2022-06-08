@@ -18,15 +18,6 @@ class Member(models.Model, DirtyFieldsMixin):
         choices=MemberType.choices,
         default=MemberType.PENDED,
     )
-
-    @property
-    def member_id(self):
-        return self.id
-
-    @property
-    def user(self):
-        return self.member.id
-
     @property
     def nickname(self):
         return self.member.nickname
