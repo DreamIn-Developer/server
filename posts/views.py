@@ -3,7 +3,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 
 from images.models import Image
-from posts.models import Post, Comment, TeamPost, TeamComment, BookMark
+from posts.models import Post, Comment, TeamPost, TeamComment, BookMark, PostLike, TeamPostLike
 from posts.seirlaizers import PostSerializer, PostSummarizeSerializer, CommentSerializer, \
     TeamPostSummarizeSerializer, TeamCommentSerializer, TeamPostSerializer
 
@@ -67,10 +67,10 @@ class PostViewSet(viewsets.ModelViewSet):
         scrap = BookMark.objects.filter(user=request.user, post_id=pk).first()
         if scrap:
             scrap.delete()
-            return Response({'message': "cancel follow"}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'message': "cancel scrap"}, status=status.HTTP_204_NO_CONTENT)
         else:
             BookMark.objects.create(user=request.user, post_id=pk)
-            return Response({'message': 'success follow'}, status=status.HTTP_201_CREATED)
+            return Response({'message': 'success scrap'}, status=status.HTTP_201_CREATED)
         return Response({'error_message': 'request data error'}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['get'])
@@ -78,6 +78,17 @@ class PostViewSet(viewsets.ModelViewSet):
         queryset = Post.objects.all().order_by('?')
         serializer = PostSummarizeSerializer(queryset, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def like(self, request, pk):
+        like = PostLike.objects.filter(user=request.user, post_id=pk).first()
+        if like:
+            like.delete()
+            return Response({'message': "cancel like"}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            PostLike.objects.create(user=request.user, post_id=pk)
+            return Response({'message': 'success like'}, status=status.HTTP_201_CREATED)
+        return Response({'error_message': 'request data error'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -138,6 +149,17 @@ class TeamPostViewSet(viewsets.ModelViewSet):
         comments = TeamComment.objects.filter(post__id=pk)
         serializer = TeamCommentSerializer(comments, many=True, context={'request': request, 'pk': pk})
         return Response(serializer.data, status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def like(self, request, pk):
+        like = TeamPostLike.objects.filter(user=request.user, team_post_id=pk).first()
+        if like:
+            like.delete()
+            return Response({'message': "cancel like"}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            TeamPostLike.objects.create(user=request.user, team_post_id=pk)
+            return Response({'message': 'success like'}, status=status.HTTP_201_CREATED)
+        return Response({'error_message': 'request data error'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TeamCommentViewSet(viewsets.ModelViewSet):

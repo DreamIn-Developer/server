@@ -75,3 +75,11 @@ class TeamComment(models.Model):
 
     def __str__(self):
         return self.description
+
+class PostLike(models.Model):
+    post = models.ForeignKey('posts.Post', on_delete=models.CASCADE)
+    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
+
+class TeamPostLike(models.Model):
+    team_post = models.ForeignKey('posts.TeamPost', on_delete=models.CASCADE)
+    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
