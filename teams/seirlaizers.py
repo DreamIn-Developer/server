@@ -28,6 +28,16 @@ class MemberSerializer(serializers.ModelSerializer):
             'member',
             'member_type',
         )
+        read_only_fields = (
+            'id',
+            'team',
+            'member',
+            'member_type',
+        )
+
+    def update(self,instance, validated_data):
+        validated_data["member_type"] = 'confirmed'
+        return super().update(instance,validated_data)
 
 # 이미 팔로우하고 있을때를 구별해야함
 class TeamFollowSerializer(serializers.ModelSerializer):
@@ -110,7 +120,7 @@ class MemberSummarizeSerializer(serializers.ModelSerializer):
             'post_count',
             'image',
         )
-        
+
     def get_user_id(self,obj):
         return obj.member.id
 
