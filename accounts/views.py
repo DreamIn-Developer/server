@@ -143,7 +143,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
     @action(methods=['get'], detail=True)
     def posts(self, request, pk):
         queryset = Post.objects.filter(author_id=pk)
-        serializer = PostSummarizeSerializer(queryset, many=True)
+        serializer = PostSummarizeSerializer(queryset, many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=['get'], detail=True)

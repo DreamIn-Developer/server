@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from images.models import Image
-from posts.models import Post, Comment, BookMark, TeamPost, TeamComment
+from posts.models import Post, Comment, BookMark, TeamPost, TeamComment, PostLike
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -52,6 +52,8 @@ class PostScrapSummarizeSerializer(serializers.ModelSerializer):
 
 class PostSummarizeSerializer(serializers.ModelSerializer):
     images = ImageSerializer(read_only=True, many=True)
+    is_like = serializers.SerializerMethodField()
+    is_scrap = serializers.SerializerMethodField()
     class Meta:
         model = Post
         fields = (
@@ -62,7 +64,41 @@ class PostSummarizeSerializer(serializers.ModelSerializer):
             'updated_at',
             'author',
             'comment_count',
+            'like_count',
+            'scrap_count',
+            'is_like',
+            'is_scrap',
         )
+        read_only_fields=(
+            'comment_count',
+            'like_count',
+            'scrap_count',
+            'is_like',
+            'is_scrap',
+        )
+    def get_is_like(self, obj):
+        request = self.context.get("request")
+        print(request)
+        if request != None:
+            print(request.user)
+            is_like = PostLike.objects.filter(user=request.user, post=obj).first()
+            if is_like is None:
+                return False
+            else:
+                return True
+        else:
+            return False
+
+    def get_is_scrap(self, obj):
+        request = self.context.get("request")
+        if request != None:
+            is_scrap = BookMark.objects.filter(user=request.user, post=obj).first()
+            if is_scrap is None:
+                return False
+            else:
+                return True
+        else:
+            return False
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:

@@ -12,6 +12,14 @@ class Post(models.Model):
     def comment_count(self):
         return self.comment_set.count()
 
+    @property
+    def like_count(self):
+        return self.postlike_set.count()
+
+    @property
+    def scrap_count(self):
+        return self.bookmark_set.count()
+
 class Comment(models.Model):
     author = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
     description = models.TextField()
