@@ -78,7 +78,7 @@ class PostViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def main(self, request):
         queryset = Post.objects.all().order_by('?')
-        serializer = PostSummarizeSerializer(queryset, many=True)
+        serializer = PostSummarizeSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data, status.HTTP_200_OK)
 
     @action(detail=True, methods=['post'])
