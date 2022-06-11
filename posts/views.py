@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from images.models import Image
 from posts.models import Post, Comment, TeamPost, TeamComment, BookMark, PostLike, TeamPostLike
 from posts.seirlaizers import PostSerializer, PostSummarizeSerializer, CommentSerializer, \
-    TeamPostSummarizeSerializer, TeamCommentSerializer, TeamPostSerializer
+    TeamPostSummarizeSerializer, TeamCommentSerializer, TeamPostSerializer, PostRetrieveSerializer
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -16,6 +16,8 @@ class PostViewSet(viewsets.ModelViewSet):
             return PostSummarizeSerializer
         elif self.action == 'comments':
             return CommentSerializer
+        elif self.action == 'retrieve':
+            return PostRetrieveSerializer
         else:
             return PostSerializer
 
