@@ -18,7 +18,7 @@ class Post(models.Model):
 
     @property
     def scrap_count(self):
-        return self.bookmark_set.count()
+        return self.stored_post.count()
 
 class Comment(models.Model):
     author = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
