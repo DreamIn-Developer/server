@@ -149,13 +149,14 @@ class UserViewSet(mixins.RetrieveModelMixin,
     @action(methods=['get'], detail=True)
     def scraps(self, request, pk):
         post = BookMark.objects.filter(user_id=pk)
-        serializer = PostScrapSummarizeSerializer(post, many=True)
+        serializer = PostScrapSummarizeSerializer(post, many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=['get'], detail=False)
     def teams(self, request):
         teams = TeamProfile.objects.filter(members=request.user)
-        serializer = TeamProfileSerializer(teams, many=True)
+        print(request.user)
+        serializer = TeamProfileSerializer(teams, many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

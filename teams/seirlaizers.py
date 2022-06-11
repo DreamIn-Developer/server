@@ -61,7 +61,7 @@ class ApplyCheckSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
         fields = (
-            'user',
+            'member',
             'member_type',
         )
 

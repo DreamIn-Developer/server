@@ -77,11 +77,9 @@ class PostSummarizeSerializer(serializers.ModelSerializer):
             'is_scrap',
         )
     def get_is_like(self, obj):
-        request = self.context.get("request")
-        print(request)
-        if request != None:
-            print(request.user)
-            is_like = PostLike.objects.filter(user=request.user, post=obj).first()
+        user = self.context.get("request").user
+        if user != None:
+            is_like = PostLike.objects.filter(user_id=user.id, post=obj).first()
             if is_like is None:
                 return False
             else:
@@ -90,9 +88,9 @@ class PostSummarizeSerializer(serializers.ModelSerializer):
             return False
 
     def get_is_scrap(self, obj):
-        request = self.context.get("request")
-        if request != None:
-            is_scrap = BookMark.objects.filter(user=request.user, post=obj).first()
+        user = self.context.get("request").user
+        if user != None:
+            is_scrap = BookMark.objects.filter(user_id=user.id, post=obj).first()
             if is_scrap is None:
                 return False
             else:
