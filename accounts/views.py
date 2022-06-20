@@ -51,17 +51,21 @@ class UserViewSet(mixins.RetrieveModelMixin,
     @action(methods=['get'], detail=False, url_path='check-nickname')
     def check_nickname(self, request):
         nickname = request.query_params.get('nickname')
-        try:
-            _nickname = User.objects.get(nickname=nickname)
+        _nickname = User.objects.filter(nickname=nickname).first()
+        print(_nickname)
+        if _nickname:
             res = {
                 'message': 'check nickname fail'
             }
             return Response(res, status=status.HTTP_409_CONFLICT)
-        except:
+        elif _nickname == None:
             res = {
                 'message': 'check nickname ok'
             }
             return Response(res, status=status.HTTP_200_OK)
+
+        return Response({'error_message': 'request error'}, status=status.HTTP_400_BAD_REQUEST)
+
 
     @action(methods=['post'], detail=False)
     def kakao(self, request):
