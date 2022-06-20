@@ -77,9 +77,15 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def main(self, request):
-        queryset = Post.objects.all().order_by('?')
-        serializer = PostSummarizeSerializer(queryset, many=True, context={'request': request})
-        return Response(serializer.data, status.HTTP_200_OK)
+        post_queryset = Post.objects.all().order_by('?')
+        team_post_queryset = TeamPost.objects.all().order_by('?')
+        user_serializer = PostSummarizeSerializer(post_queryset, many=True, context={'request': request})
+        team_post_serializer = TeamPostSummarizeSerializer(team_post_queryset, many=True, context={'request': request})
+        res = {
+            'user_post': user_serializer.data,
+            'team_post': team_post_serializer.data,
+        }
+        return Response(res, status.HTTP_200_OK)
 
     @action(detail=True, methods=['post'])
     def like(self, request, pk):

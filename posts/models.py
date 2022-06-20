@@ -59,11 +59,16 @@ class BookMark(models.Model):
     def images(self):
         return self.post.images.image
 
+class TeamBookMark(models.Model):
+    post = models.ForeignKey('posts.TeamPost', on_delete=models.CASCADE)
+    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
+
 class TeamPost(models.Model):
     team = models.ForeignKey('teams.TeamProfile', on_delete=models.CASCADE)
     title = models.CharField(max_length=32)
     description = models.TextField()
     images = models.ManyToManyField('images.Image')
+
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

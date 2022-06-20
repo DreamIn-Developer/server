@@ -181,6 +181,28 @@ class TeamPostSerializer(serializers.ModelSerializer):
             'updated_at',
             'created_at',
         )
+    def get_is_like(self, obj):
+        user = self.context.get("request").user
+        if user != None:
+            is_like = PostLike.objects.filter(user_id=user.id, post=obj).first()
+            if is_like is None:
+                return False
+            else:
+                return True
+        else:
+            return False
+
+    def get_is_scrap(self, obj):
+        user = self.context.get("request").user
+        if user != None:
+            is_scrap = BookMark.objects.filter(user_id=user.id, post=obj).first()
+            if is_scrap is None:
+                return False
+            else:
+                return True
+        else:
+            return False
+
 
 class TeamPostSummarizeSerializer(serializers.ModelSerializer):
     images = ImageSerializer(read_only=True, many=True)

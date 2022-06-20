@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from accounts.jwt import generate_access_token
-from accounts.models import User, MainCategory, FollowRelation
+from accounts.models import User, MainCategory, FollowRelation, SubCategory
 from accounts.serializers import UserSerializer, CategorySerializer
 from posts.models import Post, BookMark
 from posts.seirlaizers import PostSummarizeSerializer, PostScrapSummarizeSerializer
@@ -155,7 +155,6 @@ class UserViewSet(mixins.RetrieveModelMixin,
     @action(methods=['get'], detail=False)
     def teams(self, request):
         teams = TeamProfile.objects.filter(members=request.user)
-        print(request.user)
         serializer = TeamProfileSerializer(teams, many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
