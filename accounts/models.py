@@ -37,8 +37,8 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
     nickname = models.CharField(max_length=15, unique=True)
-    profile_image = models.URLField(blank=True, default='')
-    background_image = models.URLField(blank=True, default='')
+    profile_image = models.URLField(max_length=511, blank=True, default='')
+    background_image = models.URLField(max_length=511, blank=True, default='')
     description = models.TextField(blank=True, default='')
     social_id = models.TextField()
     categories = models.ManyToManyField('accounts.SubCategory')

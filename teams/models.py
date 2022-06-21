@@ -49,8 +49,8 @@ class Member(models.Model, DirtyFieldsMixin):
 class TeamProfile(models.Model):
     title = models.CharField(max_length=31, unique=True)
     description = models.TextField()
-    team_profile_image = models.URLField(blank=True, default='')
-    background_image = models.URLField(blank=True, default='')
+    team_profile_image = models.URLField(max_length=511, blank=True, default='')
+    background_image = models.URLField(max_length=511, blank=True, default='')
     leader = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='team_leader')
     members = models.ManyToManyField(
         'accounts.User',

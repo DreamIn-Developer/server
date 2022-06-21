@@ -1,7 +1,6 @@
 import json
 from json import JSONDecodeError
 import requests
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, mixins
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
