@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from images.models import Image
-from posts.models import Post, Comment, BookMark, TeamPost, TeamComment, PostLike
+from posts.models import Post, Comment, BookMark, TeamPost, TeamComment, PostLike, TeamPostLike, TeamBookMark
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -181,10 +181,31 @@ class TeamPostSerializer(serializers.ModelSerializer):
             'updated_at',
             'created_at',
         )
+
+
+class TeamPostSummarizeSerializer(serializers.ModelSerializer):
+    images = ImageSerializer(read_only=True, many=True)
+    is_like = serializers.SerializerMethodField()
+    is_scrap = serializers.SerializerMethodField()
+    class Meta:
+        model = TeamPost
+        fields = (
+            'id',
+            'team',
+            'images',
+            'title',
+            'created_at',
+            'updated_at',
+            'comment_count',
+            'like_count',
+            'scrap_count',
+            'is_like',
+            'is_scrap'
+        )
     def get_is_like(self, obj):
         user = self.context.get("request").user
         if user != None:
-            is_like = PostLike.objects.filter(user_id=user.id, post=obj).first()
+            is_like = TeamPostLike.objects.filter(user_id=user.id, team_post=obj).first()
             if is_like is None:
                 return False
             else:
@@ -195,27 +216,13 @@ class TeamPostSerializer(serializers.ModelSerializer):
     def get_is_scrap(self, obj):
         user = self.context.get("request").user
         if user != None:
-            is_scrap = BookMark.objects.filter(user_id=user.id, post=obj).first()
+            is_scrap = TeamBookMark.objects.filter(user_id=user.id, post=obj).first()
             if is_scrap is None:
                 return False
             else:
                 return True
         else:
             return False
-
-
-class TeamPostSummarizeSerializer(serializers.ModelSerializer):
-    images = ImageSerializer(read_only=True, many=True)
-    class Meta:
-        model = TeamPost
-        fields = (
-            'id',
-            'images',
-            'title',
-            'created_at',
-            'updated_at',
-            'comment_count',
-        )
 
 class TeamCommentSerializer(serializers.ModelSerializer):
     class Meta:
