@@ -73,7 +73,7 @@ class TeamViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=True)
     def posts(self, request, pk):
         queryset = TeamPost.objects.filter(team_id=pk)
-        serializer = TeamPostSummarizeSerializer(queryset, many=True)
+        serializer = TeamPostSummarizeSerializer(queryset, many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
