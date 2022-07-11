@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Post(models.Model):
     author = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
     title = models.CharField(max_length=32)
@@ -20,12 +21,14 @@ class Post(models.Model):
     def scrap_count(self):
         return self.stored_post.count()
 
+
 class Comment(models.Model):
     author = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
     description = models.TextField()
     post = models.ForeignKey('posts.Post', on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
 
 class BookMark(models.Model):
     post = models.ForeignKey('posts.Post', on_delete=models.CASCADE, related_name='stored_post')
@@ -55,9 +58,11 @@ class BookMark(models.Model):
     def images(self):
         return self.post.images.values('image')
 
+
 class TeamBookMark(models.Model):
     post = models.ForeignKey('posts.TeamPost', on_delete=models.CASCADE)
     user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
+
 
 class TeamPost(models.Model):
     team = models.ForeignKey('teams.TeamProfile', on_delete=models.CASCADE)
@@ -83,6 +88,7 @@ class TeamPost(models.Model):
     def scrap_count(self):
         return self.teambookmark_set.count()
 
+
 class TeamComment(models.Model):
     author = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
     description = models.TextField()
@@ -93,10 +99,28 @@ class TeamComment(models.Model):
     def __str__(self):
         return self.description
 
+
 class PostLike(models.Model):
     post = models.ForeignKey('posts.Post', on_delete=models.CASCADE)
     user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
 
+    @property
+    def nickname(self):
+        return self.user.nickname
+
+    @property
+    def profile_image(self):
+        return self.user.profile_image
+
+
 class TeamPostLike(models.Model):
     team_post = models.ForeignKey('posts.TeamPost', on_delete=models.CASCADE)
     user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
+
+    @property
+    def nickname(self):
+        return self.user.nickname
+
+    @property
+    def profile_image(self):
+        return self.user.profile_image

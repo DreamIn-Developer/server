@@ -5,7 +5,8 @@ from rest_framework.decorators import action
 from images.models import Image
 from posts.models import Post, Comment, TeamPost, TeamComment, BookMark, PostLike, TeamPostLike
 from posts.seirlaizers import PostSerializer, PostSummarizeSerializer, CommentSerializer, \
-    TeamPostSummarizeSerializer, TeamCommentSerializer, TeamPostSerializer, PostRetrieveSerializer
+    TeamPostSummarizeSerializer, TeamCommentSerializer, TeamPostSerializer, PostRetrieveSerializer, \
+    TeamPostLikeUserSerializer
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -98,6 +99,12 @@ class PostViewSet(viewsets.ModelViewSet):
             return Response({'message': 'success like'}, status=status.HTTP_201_CREATED)
         return Response({'error_message': 'request data error'}, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=True, methods=['get'])
+    def likes(self, request, pk):
+        instance = self.get_object()
+        serializer = TeamPostLikeUserSerializer(instance.postlike_set.all(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
@@ -168,6 +175,12 @@ class TeamPostViewSet(viewsets.ModelViewSet):
             TeamPostLike.objects.create(user=request.user, team_post_id=pk)
             return Response({'message': 'success like'}, status=status.HTTP_201_CREATED)
         return Response({'error_message': 'request data error'}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['get'])
+    def likes(self, request, pk):
+        instance = self.get_object()
+        serializer = TeamPostLikeUserSerializer(instance.teampostlike_set.all(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 

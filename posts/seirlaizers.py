@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from accounts.models import User
 from images.models import Image
 from posts.models import Post, Comment, BookMark, TeamPost, TeamComment, PostLike, TeamPostLike, TeamBookMark
 
@@ -88,6 +89,17 @@ class PostSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
+class TeamPostLikeUserSerializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField(read_only=True)
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'nickname',
+            'profile_image',
+        )
+    def get_id(self, obj):
+        return obj.user.id
 
 class PostScrapSummarizeSerializer(serializers.ModelSerializer):
     id = serializers.SerializerMethodField(read_only=True)
