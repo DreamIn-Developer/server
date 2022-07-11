@@ -3,7 +3,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 
 from images.models import Image
-from posts.models import Post, Comment, TeamPost, TeamComment, BookMark, PostLike, TeamPostLike
+from posts.models import Post, Comment, TeamPost, TeamComment, BookMark, PostLike, TeamPostLike, TeamBookMark
 from posts.seirlaizers import PostSerializer, PostSummarizeSerializer, CommentSerializer, \
     TeamPostSummarizeSerializer, TeamCommentSerializer, TeamPostSerializer, PostRetrieveSerializer, \
     TeamPostLikeUserSerializer
@@ -181,6 +181,17 @@ class TeamPostViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         serializer = TeamPostLikeUserSerializer(instance.teampostlike_set.all(), many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def scrap(self, request, pk):
+        scrap = TeamBookMark.objects.filter(user=request.user, post_id=pk).first()
+        if scrap:
+            scrap.delete()
+            return Response({'message': "cancel scrap"}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            BookMark.objects.create(user=request.user, post_id=pk)
+            return Response({'message': 'success scrap'}, status=status.HTTP_201_CREATED)
+        return Response({'error_message': 'request data error'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
