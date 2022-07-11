@@ -32,7 +32,7 @@ class BookMark(models.Model):
     user = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='mark_user')
 
     @property
-    def id(self):
+    def post_id(self):
         return self.post.id
 
     @property

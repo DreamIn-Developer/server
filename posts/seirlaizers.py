@@ -90,6 +90,7 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class PostScrapSummarizeSerializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = BookMark
@@ -101,6 +102,9 @@ class PostScrapSummarizeSerializer(serializers.ModelSerializer):
             'updated_at',
             'images',
         )
+
+    def get_id(self, obj):
+        return obj.post.id
 
 class PostSummarizeSerializer(serializers.ModelSerializer):
     images = ImageSerializer(read_only=True, many=True)
