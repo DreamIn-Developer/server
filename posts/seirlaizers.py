@@ -99,7 +99,7 @@ class PostScrapSummarizeSerializer(serializers.ModelSerializer):
             'nickname',
             'created_at',
             'updated_at',
-            'images',
+            'image_list',
         )
 
 class PostSummarizeSerializer(serializers.ModelSerializer):

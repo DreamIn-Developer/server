@@ -59,7 +59,6 @@ class TeamViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=True, url_path='profile/members')
     def profile_members(self, request, pk):
-        print('asdasd')
         queryset = Member.objects.filter(team_id=pk, member_type='confirmed')
         serializer = MemberprofileSummarizeSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
