@@ -36,10 +36,6 @@ class BookMark(models.Model):
         return self.post.id
 
     @property
-    def image_list(self):
-        return self.post.images.values('image')
-
-    @property
     def title(self):
         return self.post.title
 
@@ -57,7 +53,7 @@ class BookMark(models.Model):
 
     @property
     def images(self):
-        return self.post.images.image
+        return self.post.images.values('image')
 
 class TeamBookMark(models.Model):
     post = models.ForeignKey('posts.TeamPost', on_delete=models.CASCADE)
