@@ -189,7 +189,7 @@ class TeamPostViewSet(viewsets.ModelViewSet):
             scrap.delete()
             return Response({'message': "cancel scrap"}, status=status.HTTP_204_NO_CONTENT)
         else:
-            BookMark.objects.create(user=request.user, post_id=pk)
+            TeamBookMark.objects.create(user=request.user, post_id=pk)
             return Response({'message': 'success scrap'}, status=status.HTTP_201_CREATED)
         return Response({'error_message': 'request data error'}, status=status.HTTP_400_BAD_REQUEST)
 
