@@ -3,6 +3,7 @@ from rest_framework import serializers
 from accounts.models import User
 from images.models import Image
 from posts.models import Post, Comment, BookMark, TeamPost, TeamComment, PostLike, TeamPostLike, TeamBookMark
+from teams.models import TeamProfile
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -118,10 +119,22 @@ class PostScrapSummarizeSerializer(serializers.ModelSerializer):
     def get_id(self, obj):
         return obj.post.id
 
+
+class AuthorInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'nickname',
+            'profile_image',
+        )
+
+
 class PostSummarizeSerializer(serializers.ModelSerializer):
     images = ImageSerializer(read_only=True, many=True)
     is_like = serializers.SerializerMethodField()
     is_scrap = serializers.SerializerMethodField()
+    author = AuthorInfoSerializer(read_only=True)
     class Meta:
         model = Post
         fields = (
@@ -199,10 +212,21 @@ class TeamPostSerializer(serializers.ModelSerializer):
         )
 
 
+class TeamInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeamProfile
+        fields = (
+            'id',
+            'title',
+            'team_profile_image',
+        )
+
+
 class TeamPostSummarizeSerializer(serializers.ModelSerializer):
     images = ImageSerializer(read_only=True, many=True)
     is_like = serializers.SerializerMethodField()
     is_scrap = serializers.SerializerMethodField()
+    team = TeamInfoSerializer(read_only=True)
     class Meta:
         model = TeamPost
         fields = (
