@@ -198,7 +198,9 @@ class CommentSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 class TeamPostSerializer(serializers.ModelSerializer):
-    images= ImageSerializer(read_only=True, many=True)
+    images = ImageSerializer(read_only=True, many=True)
+    is_like = serializers.SerializerMethodField()
+    is_scrap = serializers.SerializerMethodField()
     class Meta:
         model = TeamPost
         fields = (
@@ -209,7 +211,32 @@ class TeamPostSerializer(serializers.ModelSerializer):
             'images',
             'updated_at',
             'created_at',
+            'is_like',
+            'is_scrap',
         )
+
+    def get_is_like(self, obj):
+        user = self.context.get("request").user
+        print(user)
+        if user != None:
+            is_like = TeamPostLike.objects.filter(user_id=user.id, team_post=obj).first()
+            if is_like is None:
+                return False
+            else:
+                return True
+        else:
+            return False
+
+    def get_is_scrap(self, obj):
+        user = self.context.get("request").user
+        if user != None:
+            is_scrap = TeamBookMark.objects.filter(user_id=user.id, post=obj).first()
+            if is_scrap is None:
+                return False
+            else:
+                return True
+        else:
+            return False
 
 
 class TeamInfoSerializer(serializers.ModelSerializer):
@@ -244,6 +271,7 @@ class TeamPostSummarizeSerializer(serializers.ModelSerializer):
         )
     def get_is_like(self, obj):
         user = self.context.get("request").user
+        print(user)
         if user != None:
             is_like = TeamPostLike.objects.filter(user_id=user.id, team_post=obj).first()
             if is_like is None:
